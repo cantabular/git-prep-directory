@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
 
 jobs:
@@ -20,4 +20,4 @@ jobs:
 
       - name: Run
         run: |
-          ./git-prep-directory --url https://github.com/sensiblecodeio/git-prep-directory -ref master
+          ./git-prep-directory --url https://github.com/sensiblecodeio/git-prep-directory -ref main
