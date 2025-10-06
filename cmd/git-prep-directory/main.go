@@ -24,7 +24,7 @@ func init() {
 func main() {
 	cmd := &cli.Command{
 		Name:    "git-prep-directory",
-		Version: "0.7.0",
+		Version: "0.8.1",
 		Usage: "Build tools friendly way of repeatedly cloning a git\n" +
 			"   repository using a submodule cache and setting file timestamps to commit times.",
 		Action: actionMain,
