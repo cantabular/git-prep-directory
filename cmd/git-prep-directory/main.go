@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -8,7 +9,7 @@ import (
 
 	"github.com/sensiblecodeio/git-prep-directory"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 )
 
 // CloneTimeout specifies the duration allowed for each individual `git clone`
@@ -21,40 +22,41 @@ func init() {
 }
 
 func main() {
-	app := cli.NewApp()
-	app.Name = "git-prep-directory"
-	app.Version = "0.6.0"
-	app.Usage = "Build tools friendly way of repeatedly cloning a git\n" +
-		"   repository using a submodule cache and setting file timestamps to commit times."
-
-	app.Action = actionMain
-
-	app.Flags = []cli.Flag{
-		&cli.StringFlag{
-			Name:  "url, u",
-			Usage: "URL to clone",
-		},
-		&cli.StringFlag{
-			Name:  "ref, r",
-			Usage: "ref to checkout",
-		},
-		&cli.StringFlag{
-			Name:  "destination, d",
-			Usage: "destination dir",
-			Value: "./src",
-		},
-		&cli.DurationFlag{
-			Name:    "timeout, t",
-			Usage:   "clone timeout",
-			Value:   CloneTimeout,
-			EnvVars: []string{"GIT_PREP_DIR_TIMEOUT"},
+	cmd := &cli.Command{
+		Name:    "git-prep-directory",
+		Version: "0.6.0",
+		Usage: "Build tools friendly way of repeatedly cloning a git\n" +
+			"   repository using a submodule cache and setting file timestamps to commit times.",
+		Action: actionMain,
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "url, u",
+				Usage: "URL to clone",
+			},
+			&cli.StringFlag{
+				Name:  "ref, r",
+				Usage: "ref to checkout",
+			},
+			&cli.StringFlag{
+				Name:  "destination, d",
+				Usage: "destination dir",
+				Value: "./src",
+			},
+			&cli.DurationFlag{
+				Name:    "timeout, t",
+				Usage:   "clone timeout",
+				Value:   CloneTimeout,
+				Sources: cli.EnvVars("GIT_PREP_DIR_TIMEOUT"),
+			},
 		},
 	}
 
-	app.RunAndExitOnError()
+	if err := cmd.Run(context.Background(), os.Args); err != nil {
+		log.Fatal(err)
+	}
 }
 
-func actionMain(c *cli.Context) error {
+func actionMain(_ context.Context, c *cli.Command) error {
 	if !c.IsSet("url") || !c.IsSet("ref") {
 		log.Fatalln("Error: --url and --ref required")
 	}
