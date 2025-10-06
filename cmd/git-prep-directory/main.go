@@ -30,20 +30,24 @@ func main() {
 		Action: actionMain,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "url, u",
+				Name:  "url",
+				Aliases: []string{"u"},
 				Usage: "URL to clone",
 			},
 			&cli.StringFlag{
 				Name:  "ref, r",
+				Aliases: []string{"r"},
 				Usage: "ref to checkout",
 			},
 			&cli.StringFlag{
-				Name:  "destination, d",
+				Name:  "destination",
+				Aliases: []string{"d"},
 				Usage: "destination dir",
 				Value: "./src",
 			},
 			&cli.DurationFlag{
-				Name:    "timeout, t",
+				Name:    "timeout",
+				Aliases: []string{"t"},
 				Usage:   "clone timeout",
 				Value:   CloneTimeout,
 				Sources: cli.EnvVars("GIT_PREP_DIR_TIMEOUT"),
